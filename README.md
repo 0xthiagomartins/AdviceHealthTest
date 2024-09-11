@@ -1,27 +1,109 @@
-*# AdviceHealthTest
-Avaliação de Conhecimentos Técnicos
+# Carford Car Shop Management System
 
-## To-Do List App
-### Description
+This project is a Flask-based API for managing car owners and their vehicles for Carford car shop in Nork-Town. It allows adding car owners, registering cars to owners, and enforces the town's vehicle ownership limits.
 
-Nork-Town is a weird place. Crows cawk the misty morning while old men squint. It’s a small town, so the mayor had a bright idea to limit the number of cars a person may possess. 
+## Features
 
-One person may have up to 3 vehicles. The vehicle, registered to a person, may have one color, ‘yellow’, ‘blue’ or ‘gray’. And one of three models, ‘hatch’, ‘sedan’ or ‘convertible’. 
+- Add car owners
+- Register cars to owners (up to 3 cars per person)
+- Secure routes with JWT authentication
+- SQLite database for data storage
+- Docker support for easy deployment and testing
 
-Carford car shop want a system where they can add car owners and cars. Car owners may not have cars yet, they need to be marked as a sale opportunity. Cars cannot exist in the system without owners.
+## Requirements
 
-**Requirements**
+- Docker and Docker Compose
+- Python 3.12 (if running locally without Docker)
 
-- Setup the dev environment with docker
-- Using docker-compose with as many volumes as it takes
-- Use Python’s Flask framework and any other library
-- Use any SQL database
-- Secure routes
-- Write tests
+## Getting Started
 
-Time to deliver, 72 hour
+### Local Development
 
-O envio do teste deverá ser através do e-mail: 
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/carford-car-shop.git
+   cd carford-car-shop
+   ```
 
-rh@****.com.br, com disponibilização do link da GITHUB
-*
+2. Create a virtual environment and install dependencies:
+   ```
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
+   pip install -r requirements.txt
+   ```
+
+3. Set up environment variables:
+   ```
+   cp .env.example .env
+   ```
+   Edit the `.env` file and set your `SECRET_KEY`.
+
+4. Run the application:
+   ```
+   python src/main.py
+   ```
+
+5. Run tests:
+   ```
+   pytest
+   ```
+
+### Development with Docker
+
+1. Build and start the containers:
+   ```
+   docker-compose up --build
+   ```
+
+2. Run tests:
+   ```
+   docker-compose run test pytest
+   ```
+
+3. To stop the containers:
+   ```
+   docker-compose down
+   ```
+
+### Production Deployment
+
+For production deployment, consider the following steps:
+
+1. Use a production-grade WSGI server like Gunicorn:
+   - Add `gunicorn` to `requirements.txt`
+   - Update the Dockerfile CMD to use Gunicorn:
+     ```
+     CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.main:app"]
+     ```
+
+2. Use a production-grade database like PostgreSQL instead of SQLite.
+
+3. Set up proper logging and monitoring.
+
+4. Ensure all sensitive information is stored securely (e.g., using environment variables or a secrets management system).
+
+5. Set up HTTPS using a reverse proxy like Nginx.
+
+## API Endpoints
+
+- `POST /persons`: Create a new person
+- `POST /persons/<person_id>/cars`: Add a car to a person
+
+For detailed API documentation, refer to the API specification document (not included in this README).
+
+## Running Tests
+
+- Locally: `pytest`
+- With Docker: `docker-compose run test pytest`
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
