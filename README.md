@@ -14,6 +14,7 @@ This project is a Flask-based API for managing car owners and their vehicles for
 
 - Docker and Docker Compose
 - Python 3.12 (if running locally without Docker)
+- jq (for running integration tests)
 
 ## Getting Started
 
@@ -40,10 +41,10 @@ This project is a Flask-based API for managing car owners and their vehicles for
 
 4. Run the application:
    ```
-   python src/main.py
+   python run.py
    ```
 
-5. Run tests:
+5. Run unit tests:
    ```
    pytest
    ```
@@ -65,24 +66,25 @@ This project is a Flask-based API for managing car owners and their vehicles for
    docker-compose down
    ```
 
-### Production Deployment
+### Running Integration Tests
 
-For production deployment, consider the following steps:
+To run the integration tests, follow these steps:
 
-1. Use a production-grade WSGI server like Gunicorn:
-   - Add `gunicorn` to `requirements.txt`
-   - Update the Dockerfile CMD to use Gunicorn:
-     ```
-     CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.main:app"]
-     ```
+1. Make sure the application is running (either locally or in Docker).
 
-2. Use a production-grade database like PostgreSQL instead of SQLite.
+2. Install jq if you haven't already:
+   ```
+   sudo apt-get install jq  # For Ubuntu/Debian
+   # or
+   brew install jq  # For macOS with Homebrew
+   ```
 
-3. Set up proper logging and monitoring.
+3. Run the integration test script:
+   ```
+   ./test_api.sh
+   ```
 
-4. Ensure all sensitive information is stored securely (e.g., using environment variables or a secrets management system).
-
-5. Set up HTTPS using a reverse proxy like Nginx.
+This script will test the API endpoints, including health check, token generation, creating a person, and adding cars to a person.
 
 ## API Endpoints
 
@@ -90,11 +92,6 @@ For production deployment, consider the following steps:
 - `POST /persons/<person_id>/cars`: Add a car to a person
 
 For detailed API documentation, refer to the API specification document (not included in this README).
-
-## Running Tests
-
-- Locally: `pytest`
-- With Docker: `docker-compose run test pytest`
 
 ## Contributing
 

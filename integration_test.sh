@@ -1,29 +1,42 @@
 #!/bin/bash
 
-# Set the base URL for the API
-BASE_URL="http://localhost:5001"  # Change this if you modified the port
+BASE_URL="http://localhost:5000"  
 
 # Health check
 echo "Performing health check..."
-HEALTH_RESPONSE=$(curl -s "${BASE_URL}/health")
-echo "Health check response: $HEALTH_RESPONSE"
+HEALTH_RESPONSE=$(curl -s -w "\n%{http_code}" "${BASE_URL}/health")
+HTTP_STATUS=$(echo "$HEALTH_RESPONSE" | tail -n1)
+HEALTH_BODY=$(echo "$HEALTH_RESPONSE" | sed '$d')
 
-if [ "$HEALTH_RESPONSE" != "OK" ]; then
+echo "Health check response (Status: $HTTP_STATUS): $HEALTH_BODY"
+
+if [ "$HTTP_STATUS" != "200" ] || [ "$HEALTH_BODY" != "OK" ]; then
     echo "Health check failed. Make sure the API is running."
     exit 1
 fi
 
 # Generate a token
 echo "Generating token..."
-TOKEN_RESPONSE=$(curl -s "${BASE_URL}/generate_token")
-TOKEN=$(echo $TOKEN_RESPONSE | grep -o '"token":"[^"]*' | grep -o '[^"]*$')
+TOKEN_RESPONSE=$(curl -s -w "\n%{http_code}" "${BASE_URL}/generate_token")
+TOKEN_STATUS=$(echo "$TOKEN_RESPONSE" | tail -n1)
+TOKEN_BODY=$(echo "$TOKEN_RESPONSE" | sed '$d')
 
-if [ -z "$TOKEN" ]; then
-    echo "Failed to generate token"
+echo "Token generation response (Status: $TOKEN_STATUS): $TOKEN_BODY"
+
+if [ "$TOKEN_STATUS" != "200" ]; then
+    echo "Failed to generate token: Non-200 status code"
     exit 1
 fi
 
-echo "Token generated successfully"
+# Extract token using awk
+TOKEN=$(echo "$TOKEN_BODY" | awk -F'"' '/"token":/{print $4}')
+
+if [ -z "$TOKEN" ]; then
+    echo "Failed to extract token from response"
+    exit 1
+fi
+
+echo "Token generated successfully: $TOKEN"
 
 # Test creating a person
 echo "Testing Create Person API..."
@@ -35,11 +48,18 @@ PERSON_RESPONSE=$(curl -s -X POST \
 
 echo "Response: $PERSON_RESPONSE"
 
-# Extract the person ID from the response (assuming the response is in JSON format)
-PERSON_ID=$(echo $PERSON_RESPONSE | grep -o '"id":[0-9]*' | grep -o '[0-9]*')
+# Extract the person ID from the response using jq
+if command -v jq &> /dev/null; then
+    PERSON_ID=$(echo "$PERSON_RESPONSE" | jq -r '.id')
+else
+    echo "jq is not installed. Please install jq or use an alternative method to parse JSON."
+    exit 1
+fi
 
-if [ -z "$PERSON_ID" ]; then
+if [ -z "$PERSON_ID" ] || [ "$PERSON_ID" = "null" ]; then
     echo "Failed to create person or extract person ID"
+    echo "Raw PERSON_RESPONSE:"
+    echo "$PERSON_RESPONSE" | jq '.'
     exit 1
 fi
 
@@ -69,7 +89,7 @@ do
     CAR_RESPONSE=$(curl -s -X POST \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $TOKEN" \
-        -d '{"color": "red", "model": "hatch"}' \
+        -d '{"color": "YELLOW", "model": "HATCH"}' \
         "${BASE_URL}/persons/${PERSON_ID}/cars")
 
     echo "Response: $CAR_RESPONSE"
