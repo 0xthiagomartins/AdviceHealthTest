@@ -1,0 +1,4 @@
+flask
+sqlmodel-controller
+pytest
+pyjwt
