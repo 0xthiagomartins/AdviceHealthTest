@@ -1,0 +1,88 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2023-12-01T12:00:00.000Z",
+    "__export_source": "insomnia.desktop.app:v2023.5.8",
+    "resources": [
+        {
+            "_id": "req_create_person",
+            "parentId": "wrk_carford_api",
+            "modified": 1701432000000,
+            "created": 1701432000000,
+            "url": "http://localhost:5000/persons",
+            "name": "Create Person",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"name\": \"John Doe\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer YOUR_TOKEN_HERE"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1701432000000,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_add_car",
+            "parentId": "wrk_carford_api",
+            "modified": 1701432000000,
+            "created": 1701432000000,
+            "url": "http://localhost:5000/persons/1/cars",
+            "name": "Add Car to Person",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"color\": \"blue\",\n\t\"model\": \"sedan\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer YOUR_TOKEN_HERE"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1701431999000,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "wrk_carford_api",
+            "parentId": null,
+            "modified": 1701432000000,
+            "created": 1701432000000,
+            "name": "Carford API",
+            "description": "",
+            "scope": "collection",
+            "_type": "workspace"
+        }
+    ]
+}
