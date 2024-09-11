@@ -7,4 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Run tests
+RUN pytest
+
 CMD ["python", "src/main.py"]

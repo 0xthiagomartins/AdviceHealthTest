@@ -1,4 +1,6 @@
 flask
-sqlmodel-controller
+sqlmodel-controller[all]
 pytest
 pyjwt
+python-dotenv
+pytest-mock
